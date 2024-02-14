@@ -118,6 +118,8 @@ public class FXMLController {
 
     @FXML
     private TableColumn<TableModel, Integer> year;
+    
+    private Integer prezzoDiRiferimento;
 
     @FXML
     void doRicerca(ActionEvent event) {
@@ -136,11 +138,9 @@ public class FXMLController {
     	}
     	Integer price;
     	try {
-    		if (this.txtPrice.getText()!="") {
-    			price = Integer.parseInt(this.txtPrice.getText());
-    		}else {
-    			price = null;
-    		}
+    		
+    		price = Integer.parseInt(this.txtPrice.getText());
+
     		
     		
     	}catch(Exception e) {
@@ -169,6 +169,8 @@ public class FXMLController {
     		List<TableModel> entries=this.model.getTableEntries();
     		ObservableList<TableModel> list = FXCollections.observableArrayList(entries);
     		table.setItems(list);
+    		if (price!= null)
+    			prezzoDiRiferimento = price;
     		List<Veicolo> auto = this.model.getFilteredAuto();
     		this.cmbAuto1.getItems().clear();
     		this.cmbAuto1.getItems().addAll(auto);
@@ -183,7 +185,7 @@ public class FXMLController {
     	try {
     		if (this.txtBudget1.getText()!="") {
     			budget = Integer.parseInt(this.txtBudget1.getText());
-    			if (budget<Integer.parseInt(this.txtPrice.getText())) {
+    			if (budget<prezzoDiRiferimento) {
     				txtAvvisi2.setText("Il budget deve essere maggiore del prezzo della prima sezione");
     				txtResult1.clear();
     				return;
