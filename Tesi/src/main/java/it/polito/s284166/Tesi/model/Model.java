@@ -68,7 +68,7 @@ public class Model {
 	public List<Veicolo> getBestSolution(Veicolo root, Integer budget, String type) {
 		this.bestPath = new ArrayList<>();
 
-		// In base al parametro scelto il punteggio da ottimizzare dalla ricorsione, il punteggio viene inizializzato
+		// Inizializzazione del punteggio in base al parametro di ricerca scelto. Il punteggio viene inizializzato
 		// con zero per i parametri numero e valore, e con un valore alto casuale per migliore (in quanto qui bisogna cercare il punteggio minimo
 		// e non il massimo)
 		if (type.compareTo("Migliore")==0) {
