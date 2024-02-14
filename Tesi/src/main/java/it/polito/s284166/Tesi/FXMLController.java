@@ -123,32 +123,34 @@ public class FXMLController {
 
     @FXML
     void doRicerca(ActionEvent event) {
+	
+	// Controlli, conversione dei dati passati come input e creazione variabili da passare al modello per la ricerca
+	// Se il valore non si esce dal metodo in quanto all'utente è permesso di selezionare i vincoli a sua scelta.
     	Integer kilometer;
     	try {
     		if (this.txtKilometer.getText()!="") {
     			kilometer = Integer.parseInt(this.txtKilometer.getText());
     		}else {
     			kilometer = null;
-    		}
-    	
-    		
+    		}	
     	}catch(Exception e) {
     		this.txtAvviso.setText("Errore nel format dei chilometri");
     		return;
     	}
+	    
+	    
     	Integer price;
     	try {
     		if (this.txtPrice.getText()!="") {
     			price = Integer.parseInt(this.txtPrice.getText());
     		}else {
     			price = null;
-    		}
-    		
-    		
+    		}		
     	}catch(Exception e) {
     		this.txtAvviso.setText("Errore nel format del prezzo");
     		return;
     	}
+	    
     	this.owner = new ToggleGroup();
     	String fuel = this.cmbFuel.getValue();
     	String color = this.cmbColor.getValue();
@@ -165,13 +167,17 @@ public class FXMLController {
 
     	this.model.doRicerca(kilometer,price, fuel, color, ownerType, marca);
     	if (this.model.getFilteredAuto().size()!= 0) {
+		
+		// Resetto label di avviso in caso di ricerca avvenuta con successo
     		if (this.txtAvviso.getText().compareTo("Avviso")!=0) {
     			txtAvviso.setText("Avviso");
     		}
+		
     		List<TableModel> entries=this.model.getTableEntries();
     		ObservableList<TableModel> list = FXCollections.observableArrayList(entries);
     		table.setItems(list);
-    		// In questo modo il prezzo di riferimento è quello dell'ultima ricerca fatta
+		
+    		// In questo modo il prezzo di riferimento per il metodo doRicorsione() è quello dell'ultima ricerca fatta
     		prezzoDiRiferimento = price;
     	
     		List<Veicolo> auto = this.model.getFilteredAuto();
@@ -188,6 +194,10 @@ public class FXMLController {
     	try {
     		if (this.txtBudget1.getText()!="") {
     			budget = Integer.parseInt(this.txtBudget1.getText());
+
+			// Se il budget inserito è minore del prezzo inserito per la ricerca non viene avviata la ricorisone, è stato scelto di utilizzare
+			// questo limite inferiore per essere sicuri che almeno un elemento sia presente nella soluzione dell'algoritmo ricorsivo. Ovviamente 
+			// questo avviene solamente se l'utente ha indicato il prezzo durante la ricerca.
     			if (prezzoDiRiferimento!= null) {
 	    			if (budget<Integer.parseInt(this.txtPrice.getText())) {
 	    				txtAvvisi2.setText("Il budget deve essere maggiore del prezzo della prima sezione");
@@ -200,9 +210,11 @@ public class FXMLController {
     	        return;
     		}	
     	}catch(Exception e) {
-    		this.txtAvvisi2.setText("Errore nel format dei del budget");
+    		this.txtAvvisi2.setText("Errore nel format del budget");
     		return;
     	}
+
+	// Inizializzione stringa che rappresenta il tipo di parametro da ottimizzare nella ricerca
     	String Ricerca = null;
     	if (this.ricerca.getSelectedToggle() != null){
 	    	if(this.ricerca.getSelectedToggle().equals(Migliore)) {
@@ -220,6 +232,8 @@ public class FXMLController {
     		txtAvvisi2.setText("Seleziona un auto da inserire");
     	}
     	List<Veicolo> result = this.model.getBestSolution(root, budget, Ricerca);
+
+	// Arrivato a questo punto devo stampare solamente l'output ed eliminare i messaggi di errore resettando la label    
     	if (txtAvvisi2.getText().compareTo("Sezione avvisi")!=0) {
     		txtAvvisi2.setText("Sezione avvisi");
     	}
