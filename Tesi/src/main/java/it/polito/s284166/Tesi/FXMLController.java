@@ -138,9 +138,11 @@ public class FXMLController {
     	}
     	Integer price;
     	try {
-    		
-    		price = Integer.parseInt(this.txtPrice.getText());
-
+    		if (this.txtPrice.getText()!="") {
+    			price = Integer.parseInt(this.txtPrice.getText());
+    		}else {
+    			price = null;
+    		}
     		
     		
     	}catch(Exception e) {
@@ -169,8 +171,9 @@ public class FXMLController {
     		List<TableModel> entries=this.model.getTableEntries();
     		ObservableList<TableModel> list = FXCollections.observableArrayList(entries);
     		table.setItems(list);
-    		if (price!= null)
-    			prezzoDiRiferimento = price;
+    		// In questo modo il prezzo di riferimento è quello dell'ultima ricerca fatta
+    		prezzoDiRiferimento = price;
+    	
     		List<Veicolo> auto = this.model.getFilteredAuto();
     		this.cmbAuto1.getItems().clear();
     		this.cmbAuto1.getItems().addAll(auto);
@@ -185,10 +188,12 @@ public class FXMLController {
     	try {
     		if (this.txtBudget1.getText()!="") {
     			budget = Integer.parseInt(this.txtBudget1.getText());
-    			if (budget<prezzoDiRiferimento) {
-    				txtAvvisi2.setText("Il budget deve essere maggiore del prezzo della prima sezione");
-    				txtResult1.clear();
-    				return;
+    			if (prezzoDiRiferimento!= null) {
+	    			if (budget<Integer.parseInt(this.txtPrice.getText())) {
+	    				txtAvvisi2.setText("Il budget deve essere maggiore del prezzo della prima sezione");
+	    				txtResult1.clear();
+	    				return;
+	    			}
     			}
     		}else {
     			txtAvvisi2.setText("Inserisci un budget");
